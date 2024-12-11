@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -42,9 +41,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
     @Scheduled(fixedRate = 86400000)
     public void cleanUpExpiredTokens() {
+        // Lấy thời gian hiện tại
+        LocalDateTime currentTime = LocalDateTime.now();
 
-        Date currentTime = new Date();
-
+        // Tìm và xóa các token hết hạn
         invalidatedTokenRepository.deleteByExpiryTimeBefore(currentTime);
 
         System.out.println("Expired tokens cleaned up at " + currentTime);

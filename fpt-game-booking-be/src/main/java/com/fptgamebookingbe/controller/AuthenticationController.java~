@@ -1,26 +1,30 @@
 package com.fptgamebookingbe.controller;
 
+import com.fptgamebookingbe.dto.Authentication.AuthenticationRequestDTO;
+import com.fptgamebookingbe.dto.Authentication.AuthenticationResponseDTO;
+import com.fptgamebookingbe.dto.IntrospectDTO;
 import com.fptgamebookingbe.dto.PasswordResetDTO;
-import com.fptgamebookingbe.dto.UserDTO;
-import com.fptgamebookingbe.entity.User;
+import com.fptgamebookingbe.service.AuthenticationService;
 import com.fptgamebookingbe.service.MailService;
 import com.fptgamebookingbe.service.UserService;
+import com.nimbusds.jose.JOSEException;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.text.ParseException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/auth")
-public class AuthController {
+@RequestMapping("/auth/v1")
+public class AuthenticationController {
 
     private final UserService userService;
     private final MailService mailService;
+
+    private final AuthenticationService authenticationService;
 
     /**
      * Request to initiate the password reset process.
@@ -80,5 +84,30 @@ public class AuthController {
         userService.updatePasswordForUser(resetDTO.getToken(), resetDTO.getNewPassword());
 
         return ResponseEntity.ok("Password has been reset successfully.");
+    }
+
+    @PostMapping("/token")
+    ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO request) {
+        var result = authenticationService.authenticate(request);
+        return ResponseEntity.ok(result);
+    }
+    @PostMapping("/introspect")
+    ResponseEntity<Boolean> authenticate(@RequestBody IntrospectDTO request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.introspectToken(request.getToken());
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/refresh")
+    ResponseEntity<AuthenticationResponseDTO> refresh(@RequestBody String token)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(token);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/logout")
+    ResponseEntity<Void> logout(@RequestBody String token) throws ParseException, JOSEException {
+        authenticationService.logout(token);
+        return ResponseEntity.noContent().build();
     }
 }
