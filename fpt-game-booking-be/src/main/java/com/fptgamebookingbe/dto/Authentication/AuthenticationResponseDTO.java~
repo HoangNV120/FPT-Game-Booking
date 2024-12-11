@@ -1,0 +1,12 @@
+package com.fptgamebookingbe.dto;
+
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class AuthenticationDTO {
+    private String token;
+    private boolean authenticated;
+}

@@ -1,0 +1,2 @@
+package com.fptgamebookingbe.mapper;public interface InvalidatedTokenMapper {
+}
