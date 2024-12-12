@@ -12,6 +12,8 @@ import com.fptgamebookingbe.service.UserService;
 import com.nimbusds.jose.JOSEException;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,11 @@ import java.text.ParseException;
 @RequiredArgsConstructor
 @RequestMapping("/auth/v1")
 public class AuthenticationController {
+
+
+    @NonFinal
+    @Value("${domain.server}")
+    protected String DOMAIN_SERVER;
 
     private final UserService userService;
     private final MailService mailService;
@@ -53,7 +60,7 @@ public class AuthenticationController {
             }
 
             String token = userService.createPasswordResetTokenForUser(user);
-            String resetLink = "http://localhost:8080/api/v1/auth/reset-password?token=" + token;
+            String resetLink = DOMAIN_SERVER + "/api/v1/auth/reset-password?token=" + token;
 
             // Send email
             mailService.sendEmail(email, "Password Reset Request",
@@ -111,5 +118,12 @@ public class AuthenticationController {
     ResponseEntity<Void> logout(@RequestBody LogoutDTO request) throws ParseException, JOSEException {
         authenticationService.logout(request.getToken());
         return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/outbound/authentication")
+    ResponseEntity<AuthenticationResponseDTO> outboundAuthenticate(
+            @RequestParam("code") String code
+    ){
+        var result = authenticationService.outboundAuthenticate(code);
+        return ResponseEntity.ok(result);
     }
 }

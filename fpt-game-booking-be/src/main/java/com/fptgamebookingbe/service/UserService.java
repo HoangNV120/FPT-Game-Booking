@@ -12,11 +12,11 @@ public interface UserService {
      */
     UserDTO getUserByEmail(String email);
 
-
     /**
-     * Creates a password reset token for the given user with the specified token.
+     * Creates a password reset token for the given user.
      *
      * @param user the account for which the password reset token is being created
+     * @return the generated password reset token
      */
     String createPasswordResetTokenForUser(User user);
 
@@ -36,10 +36,27 @@ public interface UserService {
      */
     void updatePasswordForUser(String token, String password);
 
+    /**
+     * Creates a User entity from a UserDTO.
+     *
+     * @param userDTO the UserDTO to be converted
+     * @return the created User entity
+     */
     User createUserFromDTO(UserDTO userDTO);
 
+    /**
+     * Converts a User entity to a UserDTO.
+     *
+     * @param user the User entity to be converted
+     * @return the converted UserDTO
+     */
     UserDTO userToUserDTO(User user);
 
+    /**
+     * Retrieves a UserDTO for the specified User entity.
+     *
+     * @param user the User entity for which the UserDTO is to be retrieved
+     * @return the retrieved UserDTO
+     */
     UserDTO getUserDTO(User user);
-
 }
