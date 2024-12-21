@@ -16,7 +16,7 @@ public interface UserMapper {
     User userDTOToUser(UserDTO userDTO);
 
     UserChangeInfoDTO userToUserChangeInfoDTO(User user);
-    UserChangeInfoDTO updateUserChangeInfoDTO(@MappingTarget UserChangeInfoDTO userChangeInfoDTO, UserChangeInfoDTO request);
+    void updateUser(@MappingTarget User user, UserChangeInfoDTO request);
     User changeInfoDTOToUser(UserChangeInfoDTO userChangeInfoDTO);
 }
 

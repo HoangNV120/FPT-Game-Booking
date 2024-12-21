@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api")
 public class UserController {
 
   private UserChangeImpl userService;
@@ -31,11 +31,11 @@ public class UserController {
     return apiResponse;
   }
 
-  @PostMapping("/update-info")
-  ApiResponse<UserChangeInfoDTO> updateUserInfor(@RequestBody UserChangeInfoDTO request)
+  @PutMapping("/update-info/{id}")
+  ApiResponse<UserChangeInfoDTO> updateUserInfor(@PathVariable int id ,@RequestBody UserChangeInfoDTO request)
   {
     ApiResponse apiResponse = new ApiResponse();
-    apiResponse.setResult(userService.updateUser(request));
+    apiResponse.setResult(userService.updateUser(id,request));
     return apiResponse;
   }
 }

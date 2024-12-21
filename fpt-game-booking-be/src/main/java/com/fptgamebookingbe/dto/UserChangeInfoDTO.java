@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UserChangeInfoDTO {
-  private Long id;
-
   @NotBlank(message = "Name is required.")
   @Size(max = 255, message = "Name must be less than 255 characters.")
   private String name;

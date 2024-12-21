@@ -8,6 +8,8 @@ import com.fptgamebookingbe.exception.ErrorCode;
 import com.fptgamebookingbe.mapper.UserMapper;
 import com.fptgamebookingbe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,12 +28,12 @@ public class UserChangeImpl {
     return userMapper.userToUserChangeInfoDTO(user);
   }
 
-   public UserChangeInfoDTO updateUser(UserChangeInfoDTO user) {
-    UserChangeInfoDTO userChangeInfoDTO = userMapper.userToUserChangeInfoDTO(userRepository.findById(
-        user.getId()).orElseThrow(() -> new RuntimeException("User not found")));
-
-    userMapper.updateUserChangeInfoDTO(userChangeInfoDTO, user);
-    return userMapper.userToUserChangeInfoDTO(userRepository.save(userMapper.changeInfoDTOToUser(userChangeInfoDTO)));
+   public UserChangeInfoDTO updateUser(long id,UserChangeInfoDTO user) {
+    User user1 = userRepository.findById(id).orElseThrow(() ->new AppException(ErrorCode.USER_NOT_EXISTED));
+     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+     user.setPassword(passwordEncoder.encode(user.getPassword()));
+    userMapper.updateUser(user1, user);
+    return userMapper.userToUserChangeInfoDTO(userRepository.save(user1));
   }
 
 }
