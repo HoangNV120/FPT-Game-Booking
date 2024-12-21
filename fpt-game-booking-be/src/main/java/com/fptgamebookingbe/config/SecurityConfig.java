@@ -22,7 +22,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
-        "/auth/**"
+        "/auth/**","/api/register","/api/active"
     };
 
     @Autowired
