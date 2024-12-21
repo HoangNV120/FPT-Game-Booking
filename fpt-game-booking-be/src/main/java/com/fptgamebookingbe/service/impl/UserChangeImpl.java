@@ -33,7 +33,7 @@ public class UserChangeImpl {
      PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
      user.setPassword(passwordEncoder.encode(user.getPassword()));
     userMapper.updateUser(user1, user);
-    return userMapper.userToUserChangeInfoDTO(userRepository.save(user1));
+    return userMapper.userToUserChangeInfoDTO(userRepository.save(user1));//
   }
 
 }
